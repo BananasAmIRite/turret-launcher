@@ -1,0 +1,33 @@
+{
+  "name": "camera",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "ts-node src/index.ts",
+    "install_arm64": "build-opencv --version 4.5.4 --flag=\"-DCMAKE_SYSTEM_PROCESSOR=arm64 -DCMAKE_OSX_ARCHITECTURES=arm64\" build",
+    "install_4.5.5_cuda": "build-opencv --version 4.5.5 --flags=\"-DWITH_CUDA=ON -DWITH_CUDNN=ON -DOPENCV_DNN_CUDA=ON -DCUDA_FAST_MATH=ON\" build",
+    "do-install": "build-opencv build",
+    "calibrate": "ts-node src/calibrate.ts"
+  },
+  "opencv4nodejs": {
+    "OPENCV_INCLUDE_DIR": "C:\\.path\\opencv\\build\\include",
+    "OPENCV_LIB_DIR": "C:\\.path\\opencv\\build\\x64\\vc15\\lib",
+    "OPENCV_BIN_DIR": "C:\\.path\\opencv\\build\\x64\\vc15\\bin"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@types/express": "^4.17.14",
+    "@types/glob": "^8.0.0",
+    "@u4/opencv4nodejs": "^6.2.4",
+    "express": "^4.18.2",
+    "glob": "^8.0.3",
+    "http": "^0.0.1-security",
+    "socket.io": "^4.5.3",
+    "ts-node": "^10.9.1",
+    "typescript": "^4.8.4"
+  }
+}
