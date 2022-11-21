@@ -5,7 +5,7 @@ import { glob } from 'glob';
 export default function calibrate(imgs: string[], patternSizeX: number, patternSizeY: number) {
   const objectPoints: cv.Point3[][] = [];
   const addObjPoint = () => {
-    const a = [];
+    const a: cv.Point3[] = [];
     for (let y = 0; y < patternSizeY; y++) {
       for (let x = 0; x < patternSizeX; x++) {
         a.push(new cv.Point3(x, y, 0));
