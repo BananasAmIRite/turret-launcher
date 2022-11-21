@@ -19,8 +19,6 @@ const handleError = async (f: () => any, cb: Acknowledgment) => {
     await f();
     cb({ success: true, response: null });
   } catch (err: any) {
-    // console.log(err);
-
     cb({ success: false, error: err.message });
   }
 };
@@ -47,8 +45,6 @@ const handleError = async (f: () => any, cb: Acknowledgment) => {
       handleError(() => launcherCamera.shoot(), callback);
     });
   });
-
-  // while (true) {
 
   setInterval(() => {
     const frame = video.read();
