@@ -14,7 +14,6 @@ export default function calibrate(imgs: string[], patternSizeX: number, patternS
     objectPoints.push(a);
   };
 
-  //   const worldPoints = [];
   const imagePoints: cv.Point2[][] = [];
 
   console.log('Gathering images...');
@@ -27,7 +26,6 @@ export default function calibrate(imgs: string[], patternSizeX: number, patternS
     const { returnValue, corners } = gray.findChessboardCorners(new cv.Size(patternSizeX, patternSizeY));
 
     if (!returnValue) continue;
-    // worldPoints.push(objectPoints);
     addObjPoint();
 
     const corners2 = gray.cornerSubPix(

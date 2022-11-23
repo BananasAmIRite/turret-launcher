@@ -5,6 +5,8 @@ import { Server } from 'socket.io';
 import * as fs from 'fs';
 import { Acknowledgment } from './types/types';
 import LauncherCamera from './LauncherCamera';
+import { SerialPort, SerialPortMock } from 'serialport';
+import Launcher from './Launcher';
 
 const app = express();
 const httpServer = new http.Server(app);
@@ -35,12 +37,16 @@ const handleError = async (f: () => any, cb: Acknowledgment) => {
     })
   );
 
-  const launcherCamera = new LauncherCamera(video, calibratedData.mtx, calibratedData.distCoeffs, 10);
+  const path = '/dev/test';
+  SerialPortMock.binding.createPort(path);
+
+  const launcher = new Launcher(new SerialPortMock({ path, baudRate: 9600 }));
+
+  const launcherCamera = new LauncherCamera(video, calibratedData.mtx, calibratedData.distCoeffs, launcher, 10);
 
   io.on('connection', (socket) => {
-    console.log('connecting');
     socket.on('turn', (data, callback: Acknowledgment) => {
-      handleError(() => launcherCamera.turn(), callback);
+      handleError(() => launcherCamera.turn(video.read()), callback);
     });
 
     socket.on('shoot', (data, callback: Acknowledgment) => {
@@ -48,11 +54,11 @@ const handleError = async (f: () => any, cb: Acknowledgment) => {
     });
   });
 
-  // while (true) {
+  launcher.onData((data) => io.emit('message', data));
 
   setInterval(() => {
     const frame = video.read();
-    const detectedData = launcherCamera.detectBall();
+    const detectedData = launcherCamera.detectBall(frame);
     if (detectedData) {
       frame.drawCircle(
         new cv.Point2(detectedData.pixelX, detectedData.pixelY),

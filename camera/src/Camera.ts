@@ -36,8 +36,7 @@ export default class Camera {
     protected distCoeffs: number[]
   ) {}
 
-  detectTarget(rangeLow: cv.Vec3, rangeHigh: cv.Vec3) {
-    const frame = this.capture.read();
+  detectTarget(frame: cv.Mat, rangeLow: cv.Vec3, rangeHigh: cv.Vec3) {
     const recolored = frame.cvtColor(cv.COLOR_BGR2HSV);
     const filtered = recolored.inRange(rangeLow, rangeHigh);
     const contours = filtered.findContours(cv.RETR_TREE, cv.CHAIN_APPROX_SIMPLE);
@@ -50,6 +49,8 @@ export default class Camera {
       pixelY: data.y + data.height / 2,
       width: data.width,
       height: data.height,
+
+      frame,
     };
   }
 

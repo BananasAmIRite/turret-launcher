@@ -1,22 +1,24 @@
 import * as cv from '@u4/opencv4nodejs';
 import Camera, { CameraData, DetectionData, PnPObjectData } from './Camera';
+import Launcher from './Launcher';
 
 const GRAVITY = 9.81;
 
 export default class LauncherCamera extends Camera {
-  private static OBJECT_DATA: PnPObjectData = { width: 0.055, height: 0.1 };
+  private static OBJECT_DATA: PnPObjectData = { width: 0.055, height: 0.15 };
 
   public constructor(
     capture: cv.VideoCapture,
     cameraData: CameraData,
     distCoeffs: number[],
+    private launcher: Launcher,
     private shootingVelocity: number
   ) {
     super(capture, cameraData, distCoeffs);
   }
 
-  getAngleToBall() {
-    const detectedData = this.detectBall();
+  getAngleToBall(frame: cv.Mat) {
+    const detectedData = this.detectBall(frame);
     if (!detectedData) throw new Error('No target detected');
     const position = this.solveBallPosition(detectedData);
     if (!position) throw new Error('No target detected');
@@ -24,13 +26,11 @@ export default class LauncherCamera extends Camera {
     return Math.atan(position.x / position.z);
   }
 
-  getAngleToShoot() {
-    const detectedData = this.detectBall();
+  getAngleToShoot(frame: cv.Mat) {
+    const detectedData = this.detectBall(frame);
     if (!detectedData) throw new Error('No target detected');
     const position = this.solveBallPosition(detectedData);
     if (!position) throw new Error('No target detected');
-
-    if (Math.abs(position.x) > 0.5) throw new Error('Target not close enough');
 
     return Math.atan(
       (this.shootingVelocity ** 2 -
@@ -40,14 +40,20 @@ export default class LauncherCamera extends Camera {
     );
   }
 
-  turn() {
-    throw new Error('abc');
+  turn(frame: cv.Mat) {
+    const deltaXAngle = this.getAngleToBall(frame);
+    const yAngle = this.getAngleToShoot(frame);
+
+    this.launcher.rotateX(deltaXAngle, false);
+    this.launcher.rotateY(yAngle, true);
   }
 
-  shoot() {}
+  shoot() {
+    this.launcher.shoot();
+  }
 
-  detectBall() {
-    return this.detectTarget(new cv.Vec3(136, 150, 76), new cv.Vec3(179, 255, 255));
+  detectBall(frame: cv.Mat) {
+    return this.detectTarget(frame, new cv.Vec3(136, 150, 76), new cv.Vec3(179, 255, 255));
   }
 
   solveBallPosition(detectedData: DetectionData) {
