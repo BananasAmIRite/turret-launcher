@@ -19,10 +19,6 @@ export interface CameraData {
   cy: number;
 }
 
-export interface ObjectData {
-  diameter: number;
-}
-
 export interface Position {
   x: number;
   y: number;
@@ -54,7 +50,7 @@ export default class Camera {
     };
   }
 
-  solvePosition(objectData: PnPObjectData, detectionData: DetectionData) {
+  solvePosition(objectData: PnPObjectData, detectionData: DetectionData): Position {
     const objectPoints = [
       new cv.Point3(-objectData.width / 2, -objectData.height / 2, 0),
       new cv.Point3(objectData.width / 2, -objectData.height / 2, 0),

@@ -5,7 +5,7 @@ import { Server } from 'socket.io';
 import * as fs from 'fs';
 import { Acknowledgment } from './types/types';
 import LauncherCamera from './LauncherCamera';
-import { SerialPort, SerialPortMock } from 'serialport';
+import { SerialPortMock } from 'serialport';
 import Launcher from './Launcher';
 
 const app = express();
@@ -21,8 +21,6 @@ const handleError = async (f: () => any, cb: Acknowledgment) => {
     await f();
     cb({ success: true, response: null });
   } catch (err: any) {
-    // console.log(err);
-
     cb({ success: false, error: err.message });
   }
 };
