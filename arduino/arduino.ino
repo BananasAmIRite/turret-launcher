@@ -1,24 +1,26 @@
 #include <ArduinoJson.h>
 #include <Arduino.h>
+#include <Servo.h>
 #include "Motor.h"
 
-#define X_MOTOR_PIN 1
-#define X_MOTOR_ENC1 2
-#define X_MOTOR_ENC2 3
-#define X_MOTOR_TPR 360 // TODO: change
-#define X_MOTOR_P 1
-#define X_MOTOR_I 0
-#define X_MOTOR_D 0
+#define X_SERVO_PIN 1
+// #define X_MOTOR_ENC1 2
+// #define X_MOTOR_ENC2 3
+// #define X_MOTOR_TPR 192 // TODO: change
+// #define X_MOTOR_P 1
+// #define X_MOTOR_I 0
+// #define X_MOTOR_D 0
 
 #define Y_MOTOR_PIN 3
 #define Y_MOTOR_ENC1 4
 #define Y_MOTOR_ENC2 5
-#define Y_MOTOR_TPR 360 // TODO: change
+#define Y_MOTOR_TPR 192 
 #define Y_MOTOR_P 1
 #define Y_MOTOR_I 0
 #define Y_MOTOR_D 0
 
-Motor* mX; 
+// Motor* mX; 
+Servo mX; 
 Motor* mY; 
 
 void setup()
@@ -26,12 +28,13 @@ void setup()
 
     Serial.begin(9600);
 
-	mX = new Motor(
-            X_MOTOR_PIN, 
-            X_MOTOR_ENC1, X_MOTOR_ENC2, 
-            X_MOTOR_TPR, 
-            X_MOTOR_P, X_MOTOR_I, X_MOTOR_D
-        ); 
+	// mX = new Motor(
+    //         X_MOTOR_PIN, 
+    //         X_MOTOR_ENC1, X_MOTOR_ENC2, 
+    //         X_MOTOR_TPR, 
+    //         X_MOTOR_P, X_MOTOR_I, X_MOTOR_D
+    //     ); 
+    mX.attach(X_SERVO_PIN); 
 
     mY = new Motor(
             Y_MOTOR_PIN, 
@@ -43,9 +46,7 @@ void setup()
 
 void loop()
 {
-    mX->motorLoop();
     mY->motorLoop(); 
-
 
     if (Serial.available()) 
   {
@@ -61,8 +62,8 @@ void loop()
           double rotation = payload["rotation"]; 
           boolean rotateTo = payload["rotateTo"]; 
           if (rotateTo) {
-              mX->turnTo(rotation); 
-          } else mX->turn(rotation); 
+              mX.write(rotation); 
+          } else mX.write(mX.read() + rotation);  
       } else if (action == "rotateY") {
           StaticJsonDocument<300> payload = doc["payload"]; 
           double rotation = payload["rotation"]; 
@@ -76,5 +77,5 @@ void loop()
 }
 
 void testEncoders() {
-    Serial.write(mX->readEncoder() + " " + mY->readEncoder()); 
+    Serial.write(mY->readEncoder()); 
 }
