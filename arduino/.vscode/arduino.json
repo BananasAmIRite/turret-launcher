@@ -1,0 +1,5 @@
+{
+    "sketch": "arduino.ino",
+    "output": "build",
+    "board": "arduino:avr:circuitplay32u4cat"
+}

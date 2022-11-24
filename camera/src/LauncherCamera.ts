@@ -41,10 +41,10 @@ export default class LauncherCamera extends Camera {
   }
 
   turn(frame: cv.Mat) {
-    const deltaXAngle = this.getAngleToBall(frame);
+    const xAngle = this.getAngleToBall(frame);
     const yAngle = this.getAngleToShoot(frame);
 
-    this.launcher.rotateX(deltaXAngle, false);
+    this.launcher.rotateX(xAngle, true);
     this.launcher.rotateY(yAngle, true);
   }
 
