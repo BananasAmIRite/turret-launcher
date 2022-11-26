@@ -2,7 +2,7 @@ import { ReadlineParser, SerialPort, SerialPortMock } from 'serialport';
 
 export default class Launcher {
   private parser: ReadlineParser;
-  private data: (data: Object) => void;
+  private data?: (data: Object) => void;
   public constructor(private port: SerialPortMock) {
     // TODO: change to SerialPort
     this.parser = new ReadlineParser();

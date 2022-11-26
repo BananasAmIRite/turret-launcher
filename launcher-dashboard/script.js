@@ -1,6 +1,5 @@
 const socket = io.connect('http://localhost:3030');
 socket.on('image', (image) => {
-  // console.log('data', data);
   const img = document.getElementById('image');
   img.src = `data:image/jpeg;base64,${image}`;
 });
@@ -10,7 +9,7 @@ socket.on('position', (data) => {
 });
 
 const handleError = (res) => {
-  document.getElementById('error').innerText = res.success ? '' : `Error: ${res.error}`;
+  document.getElementById('message').innerText = res.success ? `Success: ${res.response}` : `Error: ${res.error}`;
 };
 
 document.getElementById('shoot').addEventListener('click', () => {

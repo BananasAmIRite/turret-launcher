@@ -18,8 +18,8 @@ const io = new Server(httpServer, {
 
 const handleError = async (f: () => any, cb: Acknowledgment) => {
   try {
-    await f();
-    cb({ success: true, response: null });
+    const val = await f();
+    cb({ success: true, response: val });
   } catch (err: any) {
     cb({ success: false, error: err.message });
   }
@@ -40,7 +40,7 @@ const handleError = async (f: () => any, cb: Acknowledgment) => {
 
   const launcher = new Launcher(new SerialPortMock({ path, baudRate: 9600 }));
 
-  const launcherCamera = new LauncherCamera(video, calibratedData.mtx, calibratedData.distCoeffs, launcher, 10);
+  const launcherCamera = new LauncherCamera(video, calibratedData.mtx, calibratedData.distCoeffs, launcher, 10, 0);
 
   io.on('connection', (socket) => {
     socket.on('turn', (data, callback: Acknowledgment) => {
