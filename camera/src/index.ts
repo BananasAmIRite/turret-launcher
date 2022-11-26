@@ -78,5 +78,5 @@ const handleError = async (f: () => any, cb: Acknowledgment) => {
 
     io.emit('image', cv.imencode('.jpg', frame).toString('base64'));
     io.emit('data', detectedData);
-  }, 100);
+  }, 1000 / 30);
 })();
