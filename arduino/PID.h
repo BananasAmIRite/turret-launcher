@@ -6,6 +6,7 @@ class PID {
         float p; 
         float i; 
         float d; 
+        float ff; 
 
         float error = 0; 
         float errorInt = 0; 
@@ -13,7 +14,7 @@ class PID {
         time_t lastTime; 
 
     public: 
-        PID(float p, float i, float d);
+        PID(float p, float i, float d, float ff);
         void reset(); 
         float updatePID(float error); 
 }; 

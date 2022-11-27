@@ -58,39 +58,3 @@ export function solveQuarticEig(a: number, b: number, c: number, d: number, e: n
 export function normalizeAngle(angle: number) {
   return Math.atan2(Math.sin(angle), Math.cos(angle));
 }
-
-export function getShootingAngle(
-  y0: number,
-  v0: number,
-  dist: number,
-  xf: number,
-  yf: number,
-  g = 10,
-  EPSILION = 0.02 * yf + 5
-) {
-  const a = (dist ** 2 * g + 2 * v0 ** 2 * yf - 2 * y0 * v0 ** 2) ** 2 + 4 * v0 ** 4 * xf ** 2;
-  const b = -4 * xf * g * dist * (dist ** 2 * g + 2 * v0 ** 2 * yf - 2 * v0 ** 2 * y0);
-  const c =
-    2 * xf ** 2 * g * (dist ** 2 * g + 2 * v0 ** 2 * yf - 2 * v0 ** 2 * y0) +
-    4 * (xf * g * dist) ** 2 -
-    4 * xf ** 2 * v0 ** 4;
-  const d = -4 * xf ** 3 * g ** 2 * dist;
-  const e = xf ** 4 * g ** 2;
-
-  const solved = solveQuarticEig(a, b, c, d, e);
-
-  return solved
-    .map((e) => Math.acos(e))
-    .concat(solved.map((e) => normalizeAngle(-Math.acos(e)))) // add the extra solutions not from acos
-    .filter(
-      (e) =>
-        e < Math.PI / 2 &&
-        e > -Math.PI / 2 &&
-        Math.abs(
-          (dist ** 2 * g + 2 * v0 ** 2 * yf - 2 * v0 ** 2 * y0) * Math.cos(e) ** 2 -
-            2 * xf * g * dist * Math.cos(e) -
-            xf * v0 ** 2 * Math.sin(2 * e) +
-            xf ** 2 * g
-        ) <= EPSILION
-    );
-}

@@ -40,7 +40,16 @@ const handleError = async (f: () => any, cb: Acknowledgment) => {
 
   const launcher = new Launcher(new SerialPortMock({ path, baudRate: 9600 }));
 
-  const launcherCamera = new LauncherCamera(video, calibratedData.mtx, calibratedData.distCoeffs, launcher, 10, 0);
+  const launcherCamera = new LauncherCamera(
+    video,
+    calibratedData.mtx,
+    calibratedData.distCoeffs,
+    launcher,
+    // TODO: modify these values to measurements
+    10,
+    0,
+    0
+  );
 
   io.on('connection', (socket) => {
     socket.on('turn', (data, callback: Acknowledgment) => {

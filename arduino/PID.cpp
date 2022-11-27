@@ -1,9 +1,10 @@
 #include "PID.h"
 
-PID::PID(float p, float i, float d) {
+PID::PID(float p, float i, float d, float ff) {
     this->p = p; 
     this->i = i; 
     this->d = d; 
+    this->ff = ff; 
 }
 
 void PID::reset() {
@@ -27,5 +28,5 @@ float PID::updatePID(float error) {
 
     float errorDeriv = (error - lastError) / deltaTime; 
 
-    return p * error + i * errorInt + d * errorDeriv; 
+    return p * error + i * errorInt + d * errorDeriv + ff; 
 }
